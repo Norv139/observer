@@ -2,6 +2,6 @@ module.exports = {
 	apps : [{
     name: 'observer',
     cmd: 'main.py',
-    interpreter: 'python3'
+    interpreter: 'python'
   }]
 };

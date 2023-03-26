@@ -73,19 +73,17 @@ async def fetch_change_room_log(member, before, after):
         }
         return( guild.name + ' | '  + "'" +  member_name + "'" + ' | '  + str(channel_after)  + ' | status :' + str(get_state_user(member_state)))
 
-def get_token(file_name:str, name: str | None = None):
+
+
+def get_token(file_name:str = 'token.json'):
     f = open(file_name)
     data = json.load(f)
     list_:list[str] = []
 
-    if name != None:
-        for token in data.get("tokens"):
-            if token.get("name") == name:
-                return token.get("token")
-            
-    else:
-        for token in data.get("tokens"):
-            list_.append(token.get("token"))        
-        return list_
+ 
+    for token in data.get("tokens"):
+        list_.append(token.get("token"))   
 
-    f.close()
+    f.close()     
+    return list_
+
