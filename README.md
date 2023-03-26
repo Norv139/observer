@@ -5,7 +5,6 @@
 This is a self-bot for discord that records all actions in voice and text channels on servers
 ```
 
-
 ## -- quick start --
 
 ### step 1:
@@ -13,8 +12,7 @@ This is a self-bot for discord that records all actions in voice and text channe
 #### Install requirements:
 
 ```
-python3 -m pip install -r req.txt /
-pip3 install -r req.txt
+python3 -m pip install -r req.txt
 ```
 ### step 2:
 
@@ -48,6 +46,13 @@ python3 main.py
 #### Start like demon:
 ```
 yarn global add pm2
-pm2 start / pm2 start ecosystem.config.js
+pm2 start 
 ```
 
+## -- tasks --
+- [ ] Add a database to record any state change
+	- [ ] Add orm
+	- [ ] Add function create standalone/connect database
+- [ ] Remove Requirements
+
+- [ ] Wash up and find a job

@@ -5,7 +5,39 @@ from .fetchInfo import fetch_change_room_log
 from .getAllChannel import get_all_info, get_all_info_multuTreth
 
 class DiscordObserver(Client):
-    def __init__(self, voice: bool = False, text: bool = False, write: bool = False, console: bool = False, target_list: list[int] = [], ignor_list: list[int] = [], path:str = "./"):
+    r"""
+        Сreate an observer for any guild if the user is following it
+
+        Parameters
+        -----------
+        
+        user_offline: set user's status online/ofline
+        voice: subscribe update voice channels
+        text: subscribe update text channels
+
+        write: log entry in file 
+        console: log entry in console
+        path: path log file
+
+        target_list: list of [id] target guilds
+        ignor_list: list of [id] ignor guilds
+    """
+
+    def __init__(
+            self, 
+            user_offline: bool = True,
+
+            voice: bool = False, 
+            text: bool = False, 
+
+            write: bool = False, 
+            console: bool = False, 
+            path:str = "./",
+
+            target_list: list[int] = [], 
+            ignor_list: list[int] = [], 
+        ):
+       
         # self.token = token 
         self.path = path
         self.write = write
@@ -16,10 +48,14 @@ class DiscordObserver(Client):
 
         self.on_ready_ = False
 
-        self.client = Client() # type: ignore
-    
+        self.client = Client() 
+
         @self.client.event
         async def on_ready():
+            if user_offline:
+                await self.client.change_presence(status=Status.invisible)
+                await self.client.change_presence(status=Status.offline)
+  
             self.on_ready_ = True
             user = f'{self.client.user.name}#{self.client.user.discriminator}' # type: ignore 
             print(f'We have logged in as {user}')
@@ -65,7 +101,7 @@ class DiscordObserver(Client):
             voice=voice,
             text=text, 
             category=category
-            )
+        )
         
         return date_
 

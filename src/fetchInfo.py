@@ -73,8 +73,8 @@ async def fetch_change_room_log(member, before, after):
         }
         return( guild.name + ' | '  + "'" +  member_name + "'" + ' | '  + str(channel_after)  + ' | status :' + str(get_state_user(member_state)))
 
-def get_token(name: str | None = None):
-    f = open('token.json')
+def get_token(file_name:str, name: str | None = None):
+    f = open(file_name)
     data = json.load(f)
     list_:list[str] = []
 

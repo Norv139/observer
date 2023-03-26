@@ -4,6 +4,13 @@ import logging
 import time
 
 class CloneLogger(object):
+
+    r"""
+        write: log entry in file 
+        console: log entry in console
+        path: path log file
+    """
+
     def __init__(
             self, 
             logger_name: str, 
@@ -25,11 +32,11 @@ class CloneLogger(object):
         else:
             self.file_name = path + file_name 
         
-        logger_ = self.addHandlers()
+        logger_ = self.__addHandlers()
 
         self.info = logger_.info
 
-    def addHandlers(self): 
+    def __addHandlers(self): 
         logger_ = logging.getLogger(self.file_name)
         logger_.setLevel(logging.DEBUG)
 
@@ -50,7 +57,7 @@ class CloneLogger(object):
 
         return logger_
     
-    def delHandlers(self):
+    def __delHandlers(self):
         logger = logging.getLogger(self.logger_name)
         while logger.hasHandlers():
             logger.removeHandler(logger.handlers[0])
@@ -63,9 +70,9 @@ class CloneLogger(object):
             self.file_name = file_name
         self.info(f'text file "{self.file_name}"')
 
-        self.delHandlers()
+        self.__delHandlers()
 
-        logger_ = self.addHandlers()
+        logger_ = self.__addHandlers()
 
         self.info = logger_.info
 
