@@ -3,7 +3,7 @@ from src.fetchInfo import get_token
 
 if __name__ == "__main__":
     token_list = get_token()
-    token = token_list[2]
+    token = token_list[0]
 
     observer = DiscordObserver(
         user_offline=False, 
