@@ -11,13 +11,15 @@ if [ ! -d "$DIR" ]; then
     ./.venv/bin/python -m pip install -U discord.py-self==1.9.2
 fi
 
-source ./.venv/bin/activate
+# source ./.venv/bin/activate
 
 pm2 start
 
+pm2 monit 
 echo "
-pm2 start - for start
-pm2 kill - for stop
-pm2 monit - for monitoring
+pm2 start
+pm2 kill 
+
+pm2 monit 
 "
 

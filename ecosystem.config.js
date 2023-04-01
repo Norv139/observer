@@ -2,6 +2,6 @@ module.exports = {
 	apps : [{
     name: 'observer',
     cmd: 'main.py',
-    interpreter: 'python'
+    interpreter: './.venv/bin/python'
   }]
 };

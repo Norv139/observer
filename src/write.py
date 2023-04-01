@@ -3,6 +3,8 @@ from datetime import datetime
 import logging
 import time
 
+
+
 class CloneLogger(object):
 
     r"""
@@ -14,9 +16,10 @@ class CloneLogger(object):
     def __init__(
             self, 
             logger_name: str, 
-            file_name: str | None = None, 
+            file_name: str = "", 
             write: bool = False, 
             console: bool = True, 
+            format_write: logging.Formatter = logging.Formatter('%(asctime)s | %(message)s'),
             path: str = "./"
         ):
         self.write = write
@@ -25,9 +28,11 @@ class CloneLogger(object):
         self.date_start = '{:%Y:%m:%d}'.format(datetime.now())
         self.path = path
         self.logger_name = logger_name
+
+        self.format_write = format_write
         # print(f"creaete {self.logger_name }")
         # create file name
-        if file_name == None:
+        if file_name == "":
             self.file_name = f"""{self.path}/{self.logger_name}-{"{:%Y:%m:%d}.log".format(datetime.now())}"""    
         else:
             self.file_name = path + file_name 
@@ -40,18 +45,16 @@ class CloneLogger(object):
         logger_ = logging.getLogger(self.file_name)
         logger_.setLevel(logging.DEBUG)
 
-        format_write = logging.Formatter('%(asctime)s | %(message)s') #| %(name)s 
-
         if self.console: 
             ch = logging.StreamHandler()
             ch.setLevel(logging.INFO)
-            ch.setFormatter(format_write)
+            ch.setFormatter(self.format_write)
             logger_.addHandler(ch)
 
         if self.write: 
             fh = logging.FileHandler(self.file_name)
             fh.setLevel(logging.DEBUG)
-            fh.setFormatter(format_write)
+            fh.setFormatter(self.format_write)
             logger_.addHandler(fh)
         
 
@@ -88,9 +91,9 @@ class Checker:
         # self.logger_info.info(f"run, {self.logger.logger_name}")
         time.sleep(1)
 
-async def write_in_file(data, name = "timeNow",):
+def write_in_file(data, name: str = "",):
 
-    if name == "timeNow":
+    if name == "":
         name = "{:%Y:%m:%d-%H:%M:%S}".format(datetime.now())
 
     file_name = '{}.json'.format(name)
