@@ -3,6 +3,8 @@ from sqlalchemy import create_engine, Column, ForeignKey, Integer, String, Boole
 from sqlalchemy.orm import Session, declarative_base, relationship, lazyload
 from sqlalchemy.sql import func
 
+from .write import CloneLogger
+
 from datetime import datetime
 
 Base = declarative_base()
@@ -71,7 +73,7 @@ class Message_action(Base):
 class createConnect():
     def __init__(
                 self,
-                connect_url: str = "sqlite:///test.db",
+                connect_url: str = "sqlite:///voice.db",
             ):
         
         self.connect_url = connect_url
@@ -83,6 +85,9 @@ class createConnect():
             future=True
         )
 
+        
+        self.console_logger = CloneLogger(logger_name="db_module", console=True)
+
         self.session = Session(self.engine)
         self.conn_sqlalchemy = self.engine.connect()
 
@@ -90,7 +95,9 @@ class createConnect():
             print("create create all tables")
             Base.metadata.create_all(self.engine)
 
-    def write_action(self, data:dict):
+    def write_action(self, data:dict, console: bool = False):
+        
+
         server:dict = data.get("server") # type: ignore
         user:dict = data.get("user")# type: ignore
         voice:dict = data.get("voice") # type: ignore
@@ -116,6 +123,9 @@ class createConnect():
             time = datetime.now()
         )
 
+        if console:
+            self.console_logger.info(f"{server}\n{voice}\n{user}\n{state}\n")
+
         self.session.add(action)
         self.session.commit()
 
@@ -136,6 +146,8 @@ class createConnect():
             text = text,
             time = datetime.now()
         )
+        
+
 
         self.session.add(message)
         self.session.commit()

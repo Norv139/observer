@@ -35,6 +35,11 @@ observer.run(token)
 ```
 sh start.sh
 ```
+or
+```
+pip3 install discord.py==1.7.3
+pip3 install discord.py-self==1.9.2
+```
 
 #### Start like demon:
 need yarn 
@@ -44,8 +49,8 @@ sh start_demon.sh
 
 ## -- tasks --
 - [ ] Add a database to record any state change
-	- [ ] Add orm
-	- [ ] Add function create standalone/connect database
-- [ ] Remove Requirements
-
-- [ ] Wash up and find a job
+	- [X] Add orm
+	- [X] Add function create standalone/connect database
+	- [ ] Add tables relationship
+- [ ] do standalone application without requirements
+- [ ] do interface

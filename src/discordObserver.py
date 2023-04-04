@@ -49,36 +49,25 @@ class DiscordObserver(Client):
             user_offline: bool = True,
 
             voice: bool = False, 
-            text: bool = False, 
 
             db_write: bool = True,
+            db_console: bool = False,
 
             connect_url: str = "sqlite:///observer_data.db",
-
-            log_write: bool = False,
-
-            write: bool = False, 
-            console: bool = False, 
-            path:str = "./",
 
             target_list: list[int] = [], 
             ignor_list: list[int] = [], 
         ):
-       
-        # self.token = token 
+
         self.user_offline = user_offline
 
         self.voice = voice
-        self.text = text
+        self.text = False
 
         self.db_write = db_write
         self.connect_url = connect_url
 
-        self.log_write = log_write
-        
-        self.write = write
-        self.console = console
-        self.path = path
+        self.db_console = db_console
 
         self.target_list = target_list
         self.ignor_list = ignor_list
@@ -86,8 +75,10 @@ class DiscordObserver(Client):
         self.on_ready_ = False
 
         self.client = Client() 
-        if self.db_write:
-            connect = createConnect(connect_url=self.connect_url)
+
+        connect = createConnect(connect_url=self.connect_url)
+
+        # log = CloneLogger("voice", console=True, write=True, path="./log")
 
         @self.client.event
         async def on_ready():
@@ -95,50 +86,25 @@ class DiscordObserver(Client):
                 await self.client.change_presence(status=Status.invisible)
                 await self.client.change_presence(status=Status.offline)
 
-           
-            # date_structure = get_all_info_multuTreth(self.client) # type: ignore
-            # write_in_file(date_structure)
-            # self.on_ready_ = True
             user = f'{self.client.user.name}#{self.client.user.discriminator}' # type: ignore 
             print(f'We have logged in as {user}')
 
             print("GETTING DATA...")
 
-        
-
-
         if self.voice :
-            if self.log_write:
-                voice_log = CloneLogger(
-                        "voice", 
-                        path=self.path, 
-                        console=self.console, 
-                        write=self.write
-                    )
-            
             @self.client.event
             async def on_voice_state_update(member, before, after):
                 if not bool(ignor_list) and not bool(target_list):
-                    if self.log_write:
-                        voice_log.info(await fetch_change_room_log(member, before, after))
-                    if self.db_write:
-                        connect.write_action( await fetch_change_room_data(member, before, after))
-                    
+                    connect.write_action( await fetch_change_room_data(member, before, after), console=self.db_console)
+
                 elif bool(target_list) and member.guild.id in target_list:
-                    if self.log_write:
-                        voice_log.info( await fetch_change_room_log(member, before, after))
-                    if self.db_write:
-                        connect.write_action( await fetch_change_room_data(member, before, after))
+                    connect.write_action( await fetch_change_room_data(member, before, after), console=self.db_console)
 
                 elif bool(ignor_list) and not member.guild.id in ignor_list:
-                    if self.log_write:
-                        voice_log.info( await fetch_change_room_log(member, before, after))
-                    if self.db_write:
-                        connect.write_action( await fetch_change_room_data(member, before, after))
+                    connect.write_action( await fetch_change_room_data(member, before, after), console=self.db_console)
             
         if self.text:
-            text_log = CloneLogger("text", path=self.path, console=self.console, write=self.write)
-            # CreateInfiniteLoop(Checker(text_log).check).start_practice()
+            text_log = CloneLogger("text", path="./", console=True, write=True)
             @self.client.event
             async def on_message(message):
 
