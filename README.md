@@ -13,3 +13,8 @@ docker-compose up
 ## -- not quick start --
 
 write token discord in .env and other data
+
+```
+npm i
+node index.js
+```
