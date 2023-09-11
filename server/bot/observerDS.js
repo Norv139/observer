@@ -1,18 +1,21 @@
 const { Client } = require("discord.js-selfbot-v13");
 const { DateTime } = require("luxon");
+const { exec } = require('node:child_process');
 require("dotenv").config();
 
-const { sequelize, ActionTable } = require("./dbConnect");
+const { sequelize, ActionTable } = require("../DBconnect/connectPostgreSQL");
+
+// const { and } = require("sequelize");
 const token_discord = `${process.env.DISCORD_TOKEN}`;
 
-try {
-  sequelize.authenticate();
-  sequelize.sync({ alter: true }).then(() => {}); // Doesn't drop table
+const target = !!process.env.TARGET ? process.env.TARGET.split(",") : undefined;
+const ignore = !!process.env.IGNORE ? process.env.IGNORE.split(",") : undefined;
 
-  console.log("Connection has been established successfully.");
-} catch (error) {
-  console.error("Unable to connect to the database:", error);
-}
+
+sequelize.authenticate();
+sequelize.sync({ alter: true }).then(() => {}); // Doesn't drop table
+
+console.error("Connection has been established successfully.");
 
 const client = new Client({});
 
@@ -33,7 +36,8 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
       voice_before_name:
         oldState.channel == null ? null : oldState.channel.name,
       voice_after_id: newState.channel == null ? null : newState.channel.id,
-      voice_after_name: newState.channel == null ? null : newState.channel.name,
+      voice_after_name:
+        newState.channel == null ? null : newState.channel.name,
       mute: newState.channel == null ? false : newState.selfMute,
       deaf: newState.channel == null ? false : newState.selfDeaf,
       stream: newState.channel == null ? false : newState.streaming,
@@ -41,12 +45,23 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
       suppress: newState.channel == null ? false : newState.suppress,
       time: DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss"),
     };
-
-    if (globalGuild.guild.id !== undefined) {
+    // target != null
+    if (!!target && target.indexOf(`${globalGuild.guild.id}`) !== -1) {
       ActionTable.create(action);
     }
-  } catch {
-    console.log("Error");
+    // target == null, ignore != null 
+    if (
+      !target &&
+      !!ignore &&
+      ignore.indexOf(`${globalGuild.guild.id}`) == -1
+    ) {
+      ActionTable.create(action);
+    }
+    if (!target && !ignore) {
+      ActionTable.create(action);
+    }
+  } catch (error) {
+    console.log("Error", error);
   }
 });
 

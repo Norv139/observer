@@ -6,13 +6,15 @@ const username = process.env.DB_USER || "admin_cloud";
 const password = process.env.DB_PASS || "admin";
 const dbport = process.env.DB_PORT || 5432;
 const DBHOST = process.env.DB_HOST || "localhost";
+const DIALECT = process.env.DB_DIALECT || "postgres";
 
 const tableName = `${process.env.DB_table}` || "ActionTable";
 
 const sequelize = new Sequelize(database, username, password, {
   port: dbport,
   host: DBHOST,
-  dialect: "postgres",
+  dialect: DIALECT,
+  logging: false
 });
 
 const ActionTable = sequelize.define(
