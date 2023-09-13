@@ -6,41 +6,33 @@ const { DateTime } = require("luxon");
 class ProcessManager {
   constructor(test) {
     this.test = test;
-    this.stackChildProcess = new Map();
+    this.stackChildProcess = new Map([]);
   }
 
-  crtBot(token, name, envObj = {}) {
-    const hasToken = [...this.stackChildProcess.values()].find(
+  createBot(token, name, envObj = {}) {
+    console.log(' - [ProcessManager]', 'process.createBot')
+    var hasToken = [...this.stackChildProcess.values()].find(
       (item) => item.token == token
     );
-
-    const andOfMap = [...this.stackChildProcess.keys()].pop()
-
+    var andOfMap = [...this.stackChildProcess.keys()].pop()
     var id = !andOfMap ? 1 : andOfMap + 1
-
-
-    const file = this.test ? "bot/testFile.js" : "bot/observerDS.js";
-
+    var file = this.test ? "bot/testFile.js" : "bot/observerDS.js";
     if (!!hasToken) {
+      console.log(' - [ProcessManager]', 'process.createBot', 'error: token is in use now')
       return {
-        id: undefined, 
+        id: null, 
         discription: 'error: token is in use now'
       };
     }
-
-    const anyProcess = child_process.fork(file, {
-      silent: true,
-      detached: true, 
-      stdio: 'ignore',
-    }, {
+    var anyProcess = child_process.fork(file,{
       env: {
         ...process.env,
-        DISCORD_TOKEN: token,
         ...envObj,
-      },
+        DISCORD_TOKEN: `${token}`
+      }
     });
 
-    const obj = {
+    var obj = {
       name: name,
       token: token,
       code: null,
@@ -53,31 +45,17 @@ class ProcessManager {
     this.stackChildProcess.set(id, obj);
 
     anyProcess.on("close", (code, error, signal) => {
-        const prcs = this.stackChildProcess.get(id);
-  
-        this.stackChildProcess.set(id, {
-          ...obj,
-          code: code,
-          status: "stoped",
-          discription: `${error}`,
-          process: anyProcess,
-        });
+      // var prcs = this.stackChildProcess.get(id);
+      this.stackChildProcess.set(id, {
+        ...obj,
+        code: code,
+        status: "stoped",
+        discription: `${error}`,
+        process: anyProcess,
       });
-
-    // -=-
-
-    // (code, error, signal) => {
-    //   const prcs = this.stackChildProcess.get(id);
-
-    //   this.stackChildProcess.set(id, {
-    //     ...obj,
-    //     code: code,
-    //     status: "stoped",
-    //     discription: `${error}`,
-    //     process: anyProcess,
-    //   });
-    // }
-
+    });
+    
+    console.log(' - [ProcessManager]', 'process.createBot', 'bot is been created')
     return  {
       id: id, 
       discription: 'OK'
@@ -85,16 +63,21 @@ class ProcessManager {
   }
 
   killProcessById(id) {
-    const process = this.stackChildProcess.get(id);
+    var process = this.stackChildProcess.get(id);
 
     try {
+      
       process?.process.kill();
+      console.log(' - [ProcessManager]', 'process.kill')
     } catch (error) {
       console.log(error);
       return false
     }
 
-    this.stackChildProcess.delete(id);
+    setTimeout(()=>{
+      this.stackChildProcess.delete(id);
+      console.log(' - [ProcessManager]', 'process.delete', this.stackChildProcess )
+    }, 1000)
 
     return true
   }
@@ -122,7 +105,7 @@ class ProcessManager {
   }
 
   status(name = null, hideToken = true) {
-    const keys = [...this.stackChildProcess.keys()]
+    var keys = [...this.stackChildProcess.keys()]
     
 
     switch (name) {

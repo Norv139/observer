@@ -1,8 +1,10 @@
 <script>
-  import svelteLogo from './assets/svelte.svg'
-  import viteLogo from '/vite.svg'
-  import Counter from './lib/Counter.svelte'
   import CardBot from './components/CardBot.svelte';
+  import Settings from './components/Settings.svelte';
+
+  import {getStatus} from './utils';
+
+  $: isDisplayOpen = false
 
   let obj =   {
     "id": 1,
@@ -15,15 +17,100 @@
     "process": null
   }
 
+  let overflow = 'scroll'
+
+  const changeDisplayOpen= () => {
+    isDisplayOpen = !isDisplayOpen;
+    overflow == 'scroll' 
+    ?  (()=>{overflow = 'hidden'; window.document.body.classList.toggle('off-scroll')})()
+    : (()=>{overflow = 'scroll'; window.document.body.classList.toggle('off-scroll')})()
+  }
+
+  $:promisStatus = getStatus() 
 </script>
 
-<main>
-  <CardBot 
-    {...obj}
-  />
+<main style="--main-overflow:{overflow}" id="main">
+  {#await promisStatus }
+      <CardBot />
+      {:then result } 
+
+      {#each result as unitBot, index}
+       <CardBot obj={unitBot } />
+      {/each}
+
+      {:catch error}
+      <section class="add-bot">
+        error {error}
+      </section>
+  {/await}
+
+  <section class="add-bot">
+      <button on:click={changeDisplayOpen}>+</button>
+  </section> 
+
+  {#if isDisplayOpen}
+    <div class="display">
+      <Settings reloadFn={()=>{promisStatus = getStatus() }} closeFn={changeDisplayOpen}/>
+    </div>
+  {/if}
 </main>
 
 <style>
+  :global(body.off-scroll){
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
+  
+  main{
+    padding: 0 10px;
+    display: flex;
+    gap: 10px;
+    /* overflow-x: var(--main-overflow); */
+  }
+
+  .add-bot button:hover{
+
+    box-shadow: 0 5px  5px #131313;
+
+  }
+  .add-bot button{
+    width: 80px;
+    height: 50px;
+  }
+  .add-bot{
+      position: relative;
+      min-width: 200px;
+      height: 155px;
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      align-items: center;
+
+      border: 2px solid #131313;
+      border-radius: 15px;
+      padding: 10px;
+
+      color: #131313;
+      background-color: #d3d3d3;
+    }
+  
+  .display{
+    position: absolute;
+    top: 0;
+    left: 0;
+    
+
+    width: 100vw;
+    height: 100vh;
+
+    background-color: #888888a4;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+
   .logo {
     height: 6em;
     padding: 1.5em;

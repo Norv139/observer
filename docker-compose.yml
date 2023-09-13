@@ -1,5 +1,15 @@
 services:
-  nodejs:
+  db:
+    image: postgres:14
+    restart: always
+    environment:
+      - POSTGRES_USER=admin_cloud
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=cloud_db
+    ports:
+      - 5432:5432
+   
+  servir:
     build:
       context: ./server/
       dockerfile: ./Dockerfile
@@ -16,15 +26,5 @@ services:
     ports:
       - 3000:3000
 
-
-  db:
-    image: postgres:14
-    restart: always
-    environment:
-      - POSTGRES_USER=admin_cloud
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=cloud_db
-    ports:
-      - 5432:5432
 
 # docker-compose up -d --no-deps --build nodejs

@@ -1,20 +1,17 @@
 <script>
-    export let name;
-    export let discription;
-    export let start;
-    export let code;
-    export let status;
-
-    export let process;
-    export let id;
-    export let token;
+    export let obj = null ;
 </script>
 
 <section>
-    <h2>{name}</h2>
-    <p> {code} {status} {discription}</p>
-    <p>{start}</p>
-    <button>stop</button>
+    {#if obj != null}
+        <h2>{obj.name}</h2>
+        <p> {obj.code} {obj.status} {obj.discription}</p>
+        <p> {obj.start} </p>
+        <button>stop</button>
+        {:else}
+        <h2>Loading...</h2>
+    {/if}
+    
 </section>
 
 <style>
@@ -25,7 +22,9 @@
         border-radius: 15px;
         padding: 10px;
         min-width: 200px;
+        height: 155px;
         text-align: start;
+        overflow: hidden;
     }
     section *{
         margin: 5px;
