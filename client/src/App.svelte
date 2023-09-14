@@ -38,15 +38,17 @@
        <CardBot obj={unitBot } />
       {/each}
 
+      <section class="add-bot">
+        <button on:click={changeDisplayOpen}>+</button>
+      </section> 
+
       {:catch error}
       <section class="add-bot">
         error {error}
       </section>
   {/await}
 
-  <section class="add-bot">
-      <button on:click={changeDisplayOpen}>+</button>
-  </section> 
+  
 
   {#if isDisplayOpen}
     <div class="display">
