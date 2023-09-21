@@ -9,7 +9,7 @@ services:
     ports:
       - 5432:5432
    
-  servir:
+  server:
     build:
       context: ./server/
       dockerfile: ./Dockerfile
