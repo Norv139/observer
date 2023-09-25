@@ -27,7 +27,6 @@ class ActionClass(Base):
     suppress = Column('suppress', BOOLEAN(), nullable=True)
     time = Column('time', VARCHAR(255), nullable=True, server_default=func.now())
 
-
 class createConnect():
 
     def __init__(
@@ -42,13 +41,35 @@ class createConnect():
             self.connect_url,
             future=True
         )
-
+        self.metadata_obj = MetaData()
         self.session = Session(self.engine)
         self.conn_sqlalchemy = self.engine.connect()
 
+        
+        self.table1 = Table(
+            "ActionTable",
+            self.metadata_obj,
+            Column('id', BIGINT(), autoincrement=True, primary_key=True, nullable=False),
+            Column('guild_id', BIGINT(), nullable=False, autoincrement=False),
+            Column('guild_name', VARCHAR(255), nullable=False, autoincrement=False),
+            Column('user_id', BIGINT(), nullable=False, autoincrement=False),
+            Column('user_name', VARCHAR(255), nullable=False, autoincrement=False),
+            Column('voice_before_id', BIGINT(), nullable=True, autoincrement=False),
+            Column('voice_before_name', VARCHAR(255), nullable=True, autoincrement=False),
+            Column('voice_after_id', BIGINT(),nullable=True, autoincrement=False),
+            Column('voice_after_name', VARCHAR(255), nullable=True, autoincrement=False),
+            Column('mute', BOOLEAN(), nullable=True),
+            Column('deaf', BOOLEAN(), nullable=True),
+            Column('stream', BOOLEAN(), nullable=True),
+            Column('video', BOOLEAN(), nullable=True),
+            Column('suppress', BOOLEAN(), nullable=True),
+            Column('time', VARCHAR(255), nullable=True, server_default=func.now()),
+        )
+
         if not bool(self.engine.dialect.get_table_names(self.engine.connect())):
             print("create create all tables")
-            self.Base.metadata.create_all(self.engine)
+            # self.Base.metadata.create_all(self.engine)
+            self.metadata_obj.create_all(self.engine)
 
     def write_action(self, data: dict, console: bool = False):
 

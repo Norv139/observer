@@ -8,7 +8,8 @@ from sqlalchemy import URL
 import os
 # from src.fetchInfo import get_token
 
-APP_PORT = os.getenv('DB_NAME') or 8000
+APP_PORT = os.getenv('APP_PORT') or 8000
+
 DB_NAME = os.getenv('DB_NAME') or 'cloud_db'
 DB_USER = os.getenv('DB_USER') or "admin_cloud"
 DB_PASS = os.getenv('DB_PASS') or "admin"
@@ -26,13 +27,6 @@ url = URL.create(
 
 app = Flask(__name__)
 api = Api(app)
-
-class TProcess(object):
-    name: str
-    token: str
-    target: [int | str]
-    ignore: [int | str]
-    process: object
 
 def anyRunFn(token, target, ignor):
     observer = Observer(
@@ -152,4 +146,4 @@ def delite():
 
 
 if __name__ == '__main__':
-    app.run(port=APP_PORT)
+    app.run(host='0.0.0.0', port=APP_PORT)
