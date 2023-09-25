@@ -1,5 +1,5 @@
 import threading
-from src.write import write_in_file, CloneLogger
+
 
 class MyThread(threading.Thread):
     """Thread class with a stop() method. The thread itself has to check
@@ -14,16 +14,16 @@ class MyThread(threading.Thread):
 
     def stopped(self):
         return self._stop.is_set()
-    
+
 class CreateInfiniteLoop(MyThread):
-    
+
     def __init__(self, fn):
         self.fn = fn
         self.practicethread = MyThread(target=self.infinite_loop_method)
 
     def start_practice(self):
         self.practicethread.start()
-    
+
     def stop_practice(self):
         self.practicethread.stop()
 
@@ -31,7 +31,7 @@ class CreateInfiniteLoop(MyThread):
         # print(self.practicethread.stopped())
         while not self.practicethread.stopped():
             self.fn()
-            
+
     # #This doesn't seem to work and I am still stuck in the loop
 
     # def infinite_stop(self):

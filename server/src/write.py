@@ -4,7 +4,6 @@ import logging
 import time
 
 
-
 class CloneLogger(object):
 
     r"""
@@ -14,14 +13,15 @@ class CloneLogger(object):
     """
 
     def __init__(
-            self, 
-            logger_name: str, 
-            file_name: str = "", 
-            write: bool = False, 
-            console: bool = True, 
-            format_write: logging.Formatter = logging.Formatter('%(asctime)s | %(message)s'),
-            path: str = "./"
-        ):
+        self,
+        logger_name: str,
+        file_name: str = "",
+        write: bool = False,
+        console: bool = True,
+        format_write: logging.Formatter = logging.Formatter(
+            '%(asctime)s | %(message)s'),
+        path: str = "./"
+    ):
         self.write = write
         self.console = console
 
@@ -33,33 +33,32 @@ class CloneLogger(object):
         # print(f"creaete {self.logger_name }")
         # create file name
         if file_name == "":
-            self.file_name = f"""{self.path}/{self.logger_name}-{"{:%Y:%m:%d}.log".format(datetime.now())}"""    
+            self.file_name = f"""{self.path}/{self.logger_name}-{"{:%Y:%m:%d}.log".format(datetime.now())}"""
         else:
-            self.file_name = path + file_name 
-        
+            self.file_name = path + file_name
+
         logger_ = self.__addHandlers()
 
         self.info = logger_.info
 
-    def __addHandlers(self): 
+    def __addHandlers(self):
         logger_ = logging.getLogger(self.file_name)
         logger_.setLevel(logging.DEBUG)
 
-        if self.console: 
+        if self.console:
             ch = logging.StreamHandler()
             ch.setLevel(logging.INFO)
             ch.setFormatter(self.format_write)
             logger_.addHandler(ch)
 
-        if self.write: 
+        if self.write:
             fh = logging.FileHandler(self.file_name)
             fh.setLevel(logging.DEBUG)
             fh.setFormatter(self.format_write)
             logger_.addHandler(fh)
-        
 
         return logger_
-    
+
     def __delHandlers(self):
         logger = logging.getLogger(self.logger_name)
         while logger.hasHandlers():
@@ -67,7 +66,7 @@ class CloneLogger(object):
 
     def nextFile(self, file_name=None):
         # create file name
-        if file_name == None:
+        if file_name is None:
             self.file_name = f"""{self.path}/{self.logger_name}-{"{:%Y:%m:%d}.log".format(datetime.now())}"""
         else:
             self.file_name = file_name
@@ -103,10 +102,9 @@ def write_in_file(data, name: str = "",):
     with open(file_name, 'w', encoding='utf8') as file_name:
         dump(data, file_name, ensure_ascii=False)
 
-    f.close()   
+    f.close()
 
     return file_name
-
 
 
 # print("{:%Y:%m:%d-%H:%M:%S}".format(datetime.now()))

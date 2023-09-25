@@ -1,18 +1,6 @@
 services:
-  nodejs:
-    build:
-      context: .
-      dockerfile: Dockerfile
-
-    restart: unless-stopped
-    env_file: .env
-    environment:
-      - DISCORD_TOKEN=
-      - DB_NAME=cloud_db
-      - DB_USER=admin_cloud
-      - DB_PASS=admin
-      - DB_PORT=5432
-      - DB_HOST=db
+  # client:
+  #   build: /client
 
   db:
     image: postgres:14
@@ -23,3 +11,21 @@ services:
       - POSTGRES_DB=cloud_db
     ports:
       - 5432:5432
+  
+  server:
+    build:
+      context: ./server/
+      dockerfile: ./Dockerfile
+    
+    environment:
+      - DB_NAME=cloud_db
+      - DB_USER=admin_cloud
+      - DB_PASS=admin
+      - DB_PORT=5432
+      - DB_HOST=db
+
+      - APP_PORT=8000
+    ports:
+      - 8000:8000
+
+
