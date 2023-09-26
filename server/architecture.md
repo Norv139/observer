@@ -32,7 +32,7 @@ _file_ "fetchInfo.py":
 
 ---
 
-_file_ "schemes.py:
+_file_ "schemes.py":
 
 - _описание_: Нужен для описания таблицы в бд
 - _class_ ActionClass(Base) - описание 1

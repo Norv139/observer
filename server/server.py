@@ -41,7 +41,7 @@ class ProcessManager(object):
 
         self.stack = dict({})
         self.stackProcess = dict({})
-        self.mapName = dict()
+        self.mapName = dict({})
     
     def status(self, id_ = None):  
         print(self.stackProcess)
@@ -60,7 +60,7 @@ class ProcessManager(object):
                 for envItem in self.stack.values():
                     envToken = envItem.get('token')
                     if envToken == token:
-                        return {"status": "error", 'dis': "this token is used"} 
+                        return {"status": "error", 'dis': "this token is used"}
             except: 
                 return {"status": "error", 'dis': "?"}
 
@@ -143,7 +143,6 @@ def delite():
         status = {"status": "error", 'dis': "name or id doesn't exist"}
     
     return jsonify({'status': status}), 201
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=APP_PORT)
