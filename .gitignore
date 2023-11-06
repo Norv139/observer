@@ -1,4 +1,5 @@
 # JS 
+*/node_modules
 **/node_modules
 
 # Byte-compiled / optimized / DLL files
@@ -41,7 +42,6 @@ MANIFEST
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
-
 # Unit test / coverage reports
 htmlcov/
 .tox/
