@@ -17,7 +17,7 @@ services:
       context: ./server/
       dockerfile: ./Dockerfile
     
-    environment:
+    environment: 
       - DB_NAME=cloud_db
       - DB_USER=admin_cloud
       - DB_PASS=admin
