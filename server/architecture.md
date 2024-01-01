@@ -10,7 +10,7 @@ text
 
 _dir_ src
 
-_file_ "castomTread.py":
+_file_ "customTread.py":
 
 - _fn_ MyThread:
   - **описание**: код реализующий доступ к потоку
